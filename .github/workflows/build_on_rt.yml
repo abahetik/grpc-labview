@@ -60,4 +60,4 @@ jobs:
     - name: Build
       working-directory: ${{runner.workspace}}/cmake/build
       shell: bash
-      run: make
+      run: cmake --build . --config $ENV{BUILD_TYPE} -j 2
