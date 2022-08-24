@@ -1,0 +1,63 @@
+name: Linux Build
+
+on: [push]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  CMAKE_VERSION: 3.18.3
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    name: NILRT Cross Compile with GCC 6.3.0
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+      
+    - name: Setup python3
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    # The URL used to download this toolchain may change in the future as
+    # improvements to hosting and exports of the NILRT toolchain are made.
+    - name: Install NI Linux RT CC Toolchain
+      run: |
+        wget -nv https://download.ni.com/support/softlib/labview/labview_rt/2018/Linux%20Toolchains/linux/oecore-x86_64-core2-64-toolchain-6.0.sh
+        sudo chmod a+x ./oecore-x86_64-core2-64-toolchain-6.0.sh
+        sudo ./oecore-x86_64-core2-64-toolchain-6.0.sh -y -d ${GITHUB_WORKSPACE}/nilrt-toolchain/
+        echo "${GITHUB_WORKSPACE}/nilrt-toolchain/sysroots/x86_64-nilrtsdk-linux/usr/bin/x86_64-nilrt-linux" >> ${GITHUB_PATH}
+  
+    - name: Update Submodules
+      shell: bash
+      working-directory: ${{runner.workspace}}/grpc-labview      
+      run: git submodule update --init --recursive
+
+    - name: Create Build Environment
+      # Some projects don't allow in-source building, so create a separate build directory
+      # We'll use this as our working directory for all subsequent commands
+      run: cmake -E make_directory ${{runner.workspace}}/cmake/build
+
+    - name: Configure Cross Compile
+      # Use a bash shell so we can use the same syntax for environment variable
+      # access regardless of the host operating system
+      shell: bash
+      working-directory: ${{runner.workspace}}/cmake/build
+      # Note the current convention is to use the -S and -B options here to specify source 
+      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: cmake -S $GITHUB_WORKSPACE
+                -B . 
+                -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+                -DCMAKE_TOOLCHAIN_FILE=${GITHUB_WORKSPACE}/nilrt-x86_64.cmake
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/cmake/build
+      shell: bash
+      run: make
