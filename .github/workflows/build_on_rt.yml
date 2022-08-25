@@ -32,11 +32,11 @@ jobs:
         wget -nv https://download.ni.com/support/softlib/labview/labview_rt/2018/Linux%20Toolchains/linux/oecore-x86_64-core2-64-toolchain-6.0.sh
         sudo chmod a+x ./oecore-x86_64-core2-64-toolchain-6.0.sh
         sudo ./oecore-x86_64-core2-64-toolchain-6.0.sh -y -d ${GITHUB_WORKSPACE}/nilrt-toolchain/
-        echo "${GITHUB_WORKSPACE}/nilrt-toolchain/sysroots/x86_64-nilrtsdk-linux/usr/bin/x86_64-nilrt-linux" >> ${GITHUB_PATH}
+        echo "${{runner.workspace}}/nilrt-toolchain/sysroots/x86_64-nilrtsdk-linux/usr/bin/x86_64-nilrt-linux" >> ${GITHUB_PATH}
   
     - name: Update Submodules
       shell: bash
-      working-directory: ${{runner.workspace}}/grpc-labview    
+      working-directory: ${{runner.workspace}}   
       run: git submodule update --init --recursive
 
     - name: Create Build Environment
@@ -85,10 +85,10 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake -S $GITHUB_WORKSPACE
+      run: cmake -S ${{runner.workspace}}
                 -B . 
                 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-                -DCMAKE_TOOLCHAIN_FILE=${GITHUB_WORKSPACE}/nilrt-x86_64.cmake
+                -DCMAKE_TOOLCHAIN_FILE=${{runner.workspace}}/nilrt-x86_64.cmake
 
     - name: Build Cross Compile
       working-directory: ${{runner.workspace}}/cmake/build
