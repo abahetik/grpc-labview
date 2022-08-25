@@ -36,7 +36,7 @@ jobs:
   
     - name: Update Submodules
       shell: bash
-      working-directory: ${{runner.workspace}}    
+      working-directory: ${{runner.workspace}}/grpc-labview    
       run: git submodule update --init --recursive
 
     - name: Create Build Environment
