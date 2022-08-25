@@ -44,6 +44,15 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{runner.workspace}}/cmake/build
     
+    - name: Cache Host OS gRPC Support
+      uses: actions/cache@v2
+      id: hostgrpccache
+      env:
+        cache-name: hostgrpccache
+      with:
+        path: third_party/grpc/build/
+        key: ${{ github.repository }}-${{ runner.os }}-${{ env.cache-name }}-${{ steps.submodules.outputs.grpc-commit }}
+        
     - name: Build Host OS gRPC Support
       if: steps.hostgrpccache.outputs.cache-hit != 'true'
       shell: cmake -P {0}
@@ -61,6 +70,7 @@ jobs:
           message("::error::${error_message}")
           message(FATAL_ERROR "Build failed")
         endif()
+        
     - name: Install Host OS gRPC Support
       run: sudo cmake --install ${GITHUB_WORKSPACE}/third_party/grpc/build
       
