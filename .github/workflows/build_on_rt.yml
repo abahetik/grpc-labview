@@ -36,7 +36,7 @@ jobs:
   
     - name: Update Submodules
       shell: bash
-      working-directory: ${{runner.workspace}}/grpc-labview      
+      working-directory: ${{runner.workspace}}    
       run: git submodule update --init --recursive
 
     - name: Create Build Environment
@@ -61,7 +61,7 @@ jobs:
       shell: cmake -P {0}
       run: |
         execute_process(
-          COMMAND cmake --build $ENV{GITHUB_WORKSPACE}/third_party/grpc/build
+          COMMAND cmake --build ${{runner.workspace}}/third_party/grpc/build
           RESULT_VARIABLE result
           OUTPUT_VARIABLE output
           ERROR_VARIABLE output
@@ -75,7 +75,7 @@ jobs:
         endif()
         
     - name: Install Host OS gRPC Support
-      run: sudo cmake --install ${GITHUB_WORKSPACE}/third_party/grpc/build
+      run: sudo cmake --install ${{runner.workspace}}/third_party/grpc/build
       
     - name: Configure Cross Compile
       # Use a bash shell so we can use the same syntax for environment variable
