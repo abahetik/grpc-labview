@@ -44,6 +44,9 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{runner.workspace}}/cmake/build
     
+    - name: Create build environment for third party dependencies
+      run: cmake -E make_directory ${{runner.workspace}}/third_party/grpc/build
+    
     - name: Cache Host OS gRPC Support
       uses: actions/cache@v2
       id: hostgrpccache
