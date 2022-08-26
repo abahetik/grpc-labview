@@ -56,7 +56,6 @@ jobs:
             -B $ENV{GITHUB_WORKSPACE}/third_party/grpc/build
             -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
             -D gRPC_INSTALL=ON
-            -D gRPC_BUILD_TESTS=OFF
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
