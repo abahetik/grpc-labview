@@ -120,8 +120,7 @@ jobs:
     - name: Tar Build Artifacts
       if: ${{ github.ref == 'refs/heads/master' }}
       run: >-
-        tar -czvf liblabview-grpc-server-rt.tar.gz
-        -C ${GITHUB_WORKSPACE}/build/liblabview_grpc_server.so
+        tar -czvf liblabview-grpc-server-rt.tar.gz ${GITHUB_WORKSPACE}/build/liblabview_grpc_server.so
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
@@ -130,5 +129,3 @@ jobs:
         name: liblabview-grpc-server-rt
         path: liblabview-grpc-server-rt.tar.gz
         retention-days: 5
-        
-        
