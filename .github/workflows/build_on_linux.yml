@@ -18,9 +18,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Dump GitHub Context
-      run: echo '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
 
     - name: Update Submodules
       shell: bash
