@@ -3,7 +3,7 @@ name: Trigger AzDO CIs
 on:
   workflow_call:
     secrets:
-      AZDO_PIPELINE_TRIGGERS:
+      AZDO_DEVOPS_TOKEN:
         required: true
   workflow_dispatch:
 
