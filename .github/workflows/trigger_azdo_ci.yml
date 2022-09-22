@@ -2,21 +2,26 @@ name: Trigger AzDO CIs
 
 on:
   workflow_call:
-    secrets:
-      AZURE_DEVOPS_TOKEN:
-        required: true
   workflow_dispatch:
 
 jobs:
   trigger_azdo_ci:
     name: Trigger Main CI
-    runs-on: windows-latest
-    steps:
-    - name: Trigger Main CI
-      uses: Azure/pipelines@v1.2
-      if: ${{ github.repository == 'ni/grpc-labview' }}
-      with:
-        azure-devops-project-url: 'https://dev.azure.com/ni/DevCentral'
-        azure-pipeline-name: 'ni-central-grpc-labview-build-vipkg-in-windows'
-        azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
-        azure-pipeline-variables: '{"workflow_run_id": "${{ github.run_id }}", "is_release": "false"}'
+    runs-on: self-hosted
+    stages:
+    - stage: Download Artifacts
+      displayName: Downlaod Artifacts
+      job:
+        - uses: actions/checkout@v2
+
+        - uses: actions/download-artifact@v3
+
+        - name: Display structure of downloaded files
+          run: ls -R
+    
+    # - stage: Build Vipkgs
+    #   displayName: Run Python script
+    #   job:
+    #     run  python ${{runner.workspace}}/grpc-labview/grpc-labview/build-it/build.py
+    #   --target All
+    #   --pathToBinaries "${{runner.workspace}}/grpc-labview/grpc-labview-artifacts/TopLevelDlls"
