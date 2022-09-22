@@ -8,14 +8,13 @@ jobs:
   trigger_azdo_ci:
     name: Trigger Main CI
     runs-on: self-hosted
-    jobs:
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v3
 
-      - name: Display structure of downloaded files
-        run: ls -R
+    - name: Display structure of downloaded files
+      run: ls -R
     
     # - stage: Build Vipkgs
     #   displayName: Run Python script
