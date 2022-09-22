@@ -23,4 +23,6 @@ jobs:
     needs:
       - build_linux
       - build_linux_rt
+      - windows_x86_build.yml
+      - windows_x64_build.yml
     uses: ./.github/workflows/trigger_azdo_ci.yml
