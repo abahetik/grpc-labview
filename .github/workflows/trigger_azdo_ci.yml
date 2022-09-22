@@ -17,8 +17,8 @@ jobs:
 
     - name: Stage Artifacts
       run: python ${{runner.workspace}}/grpc-labview/grpc-labview/build-it/stage_artifacts.py
-       --downloaded_path "${RUNNER_TEMP}/grpc-labview-artifacts"
-       --staging_path "${RUNNER_TEMP}/grpc-labview-staged-artifacts"
+      --downloaded_path "${RUNNER_TEMP}/grpc-labview-artifacts"
+      --staging_path "${RUNNER_TEMP}/grpc-labview-staged-artifacts"
     
     - name: Build VI Packages
       run:  python ${{runner.workspace}}/grpc-labview/grpc-labview/build-it/build.py

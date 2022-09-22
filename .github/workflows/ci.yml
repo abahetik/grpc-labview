@@ -26,4 +26,3 @@ jobs:
       - build_linux
       - build_linux_rt
     uses: ./.github/workflows/trigger_azdo_ci.yml
-    
