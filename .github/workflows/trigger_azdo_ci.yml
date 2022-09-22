@@ -8,7 +8,7 @@ jobs:
   trigger_azdo_ci:
     name: Trigger Main CI
     runs-on: self-hosted
-    job:
+    jobs:
     steps:
       - uses: actions/checkout@v2
 
